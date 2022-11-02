@@ -1,0 +1,10 @@
+{
+  "required": true,
+  "package": "net.zhuruoling.omms.controller.architectury.fabric.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "server": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

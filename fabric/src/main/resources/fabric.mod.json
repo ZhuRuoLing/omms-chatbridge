@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "id": "omms-controller-architectury",
+  "version": "${version}",
+  "name": "OMMS Controller for Architectury",
+  "description": "rua!",
+  "authors": [
+    "ZhuRuoLing"
+  ],
+  "license": "WTFPL License",
+  "icon": "assets/omms-controller/icon.png",
+  "environment": "server",
+  "entrypoints": {
+    "server": [
+      "net.zhuruoling.omms.controller.architectury.fabric.OMMSControllerFabric"
+    ]
+  },
+  "mixins": [
+    "omms-controller.mixins.json",
+    "omms-controller-common.mixins.json"
+  ],
+  "depends": {
+    "fabric": "*",
+    "minecraft": ">=1.19.2",
+    "architectury": ">=6.2.43"
+  }
+}

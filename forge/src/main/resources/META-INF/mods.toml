@@ -1,0 +1,35 @@
+modLoader = "javafml"
+loaderVersion = "[43,)"
+#issueTrackerURL = ""
+license = "WTFPL License"
+
+[[mods]]
+modId = "omms-controller-architectury"
+version = "${version}"
+displayName = "Example Mod"
+authors = "ZhuRuoLing"
+description = '''
+ree!
+'''
+#logoFile = ""
+
+[[dependencies.omms-controller-architectury]]
+modId = "forge"
+mandatory = true
+versionRange = "[43,)"
+ordering = "NONE"
+side = "SERVER"
+
+[[dependencies.omms-controller-architectury]]
+modId = "minecraft"
+mandatory = true
+versionRange = "[1.19.2,)"
+ordering = "NONE"
+side = "SERVER"
+
+[[dependencies.omms-controller-architectury]]
+modId = "architectury"
+mandatory = true
+versionRange = "[6.2.43,)"
+ordering = "AFTER"
+side = "SERVER"
