@@ -4,7 +4,7 @@ loaderVersion = "[43,)"
 license = "WTFPL License"
 
 [[mods]]
-modId = "omms-controller-architectury"
+modId = "ommscontrollerarchitectury"
 version = "${version}"
 displayName = "Example Mod"
 authors = "ZhuRuoLing"
@@ -13,21 +13,21 @@ ree!
 '''
 #logoFile = ""
 
-[[dependencies.omms-controller-architectury]]
+[[dependencies.ommscontrollerarchitectury]]
 modId = "forge"
 mandatory = true
 versionRange = "[43,)"
 ordering = "NONE"
 side = "SERVER"
 
-[[dependencies.omms-controller-architectury]]
+[[dependencies.ommscontrollerarchitectury]]
 modId = "minecraft"
 mandatory = true
 versionRange = "[1.19.2,)"
 ordering = "NONE"
 side = "SERVER"
 
-[[dependencies.omms-controller-architectury]]
+[[dependencies.ommscontrollerarchitectury]]
 modId = "architectury"
 mandatory = true
 versionRange = "[6.2.43,)"
