@@ -51,3 +51,12 @@ public class UdpReceiver extends Thread{
         }
     }
 }
+/*
+java.io.IOException: Network interface not configured for IPv4
+        at java.base/sun.nio.ch.DatagramChannelImpl.innerJoin(DatagramChannelImpl.java:1534)
+        at java.base/sun.nio.ch.DatagramChannelImpl.join(DatagramChannelImpl.java:1559)
+        at java.base/sun.nio.ch.DatagramSocketAdaptor.joinGroup(DatagramSocketAdaptor.java:535)
+        at java.base/java.net.DatagramSocket.joinGroup(DatagramSocket.java:1292)
+        at java.base/java.net.MulticastSocket.joinGroup(MulticastSocket.java:371)
+        at TRANSFORMER/ommscontrollerarchitectury@0.7.0/net.zhuruoling.omms.controller.architectury.network.UdpReceiver.run(UdpReceiver.java:35)
+        */

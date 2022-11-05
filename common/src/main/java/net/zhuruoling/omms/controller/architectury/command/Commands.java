@@ -14,7 +14,9 @@ import net.zhuruoling.omms.controller.architectury.config.Config;
 import net.zhuruoling.omms.controller.architectury.config.ConstantStorage;
 import net.zhuruoling.omms.controller.architectury.util.Util;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.Objects;
 
@@ -53,56 +55,55 @@ public class Commands {
                                     .executes(context -> {
                                         String name = StringArgumentType.getString(context, "name");
                                         String url = "http://%s:%d/announcement/get/%s".formatted(ConstantStorage.getConfig().getHttpQueryAddr(), ConstantStorage.getConfig().getHttpQueryPort(), name);
+
                                         return getAnnouncementToPlayerFromUrl(context, url);
                                     })
                     )
             )
             .then(LiteralArgumentBuilder.<ServerCommandSource>literal("list")
                     .requires(serverCommandSource -> serverCommandSource.hasPermissionLevel(0)).executes(context -> {
-                        String url = "http://%s:%d/announcement/list".formatted(ConstantStorage.getConfig().getHttpQueryAddr(), ConstantStorage.getConfig().getHttpQueryPort());
-                        String result = Objects.requireNonNull(Util.invokeHttpGetRequest(url));
                         try {
-                            String[] list = new Gson().fromJson(result, String[].class);
-                            ArrayList<Text> texts = new ArrayList<>();
-                            for (String s : list) {
-                                System.out.println(s);
-                                var text = Texts.join(
-                                                List.of(
-                                                        Text.of("["),
-                                                        Text.of(s)
-                                                                .copyContentOnly()
-                                                                .setStyle(
-                                                                        Style.EMPTY
-                                                                                .withColor(Formatting.GREEN)
-                                                                ),
-                                                        Text.of("]")
-                                                ),
-                                                Text.of("")
-                                        )
-                                        .copyContentOnly()
-                                        .setStyle(
-                                                Style.EMPTY
-                                                        .withHoverEvent(
-                                                                new HoverEvent(
-                                                                        HoverEvent.Action.SHOW_TEXT,
-                                                                        Text.of("Click to get announcement.")
-                                                                )
-                                                        )
-                                                        .withClickEvent(
-                                                                new ClickEvent(
-                                                                        ClickEvent.Action.RUN_COMMAND,
-                                                                        "/announcement get %s".formatted(s)
-                                                                )
-                                                        )
-                                        );
-                                System.out.println(text);
 
-                            }
-                            System.out.println(texts);
-                            context.getSource().sendFeedback(Text.of("-------Announcements-------"), false);
-                            context.getSource().sendFeedback(Text.of(""), false);
-                            context.getSource().sendFeedback(Texts.join(texts, Text.of(" ")), false);
-                            context.getSource().sendFeedback(Text.of(""), false);
+//                            String url = "http://%s:%d/announcement/list".formatted(ConstantStorage.getConfig().getHttpQueryAddr(), ConstantStorage.getConfig().getHttpQueryPort());
+//                            String result = Objects.requireNonNull(Util.invokeHttpGetRequest(url));
+//                            String[] list = new Gson().fromJson(result, String[].class);
+//                            ArrayList<Text> texts = new ArrayList<>();
+//                            for (String s : list) {
+//                                System.out.println(s);
+//                                var coloredNameText = Text.literal(s).copyContentOnly().setStyle(Style.EMPTY.withColor(Formatting.GREEN));
+//                                var text = Texts.join(
+//                                        List.of(
+//                                                Text.literal("[").copyContentOnly(),
+//                                                coloredNameText,
+//                                                Text.literal("]").copyContentOnly()
+//                                        ),
+//                                        Text.of("").copyContentOnly()
+//                                );
+//                                System.out.println(text.toString());
+//                                text = text.copyContentOnly()
+//                                        .setStyle(
+//                                                Style.EMPTY
+//                                                        .withHoverEvent(
+//                                                                new HoverEvent(
+//                                                                        HoverEvent.Action.SHOW_TEXT,
+//                                                                        Text.literal("Click to get announcement.").copyContentOnly()
+//                                                                )
+//                                                        )
+//                                                        .withClickEvent(
+//                                                                new ClickEvent(
+//                                                                        ClickEvent.Action.RUN_COMMAND,
+//                                                                        "/announcement get %s".formatted(s)
+//                                                                )
+//                                                        )
+//                                        );
+//                                System.out.println(text);
+//                                texts.add(text);
+//                            }
+//                            System.out.println(texts);
+//                            context.getSource().sendFeedback(Text.literal("-------Announcements-------"), false);
+//                            context.getSource().sendFeedback(Text.literal(""), false);
+//                            context.getSource().sendFeedback(Texts.join(texts, Text.of(" ")), false);
+//                            context.getSource().sendFeedback(Text.literal(""), false);
                             return 0;
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -133,6 +134,7 @@ public class Commands {
                     String[] servers = new GsonBuilder().serializeNulls().create().fromJson(data, String[].class);
                     ArrayList<Text> serverEntries = new ArrayList<>();
                     String currentServer = ConstantStorage.getConfig().getWhitelistName();
+
                     for (String server : servers) {
                         boolean isCurrentServer = Objects.equals(currentServer, server);
                         Config.ServerMapping mapping = ConstantStorage.getConfig().getServerMappings().get(server);

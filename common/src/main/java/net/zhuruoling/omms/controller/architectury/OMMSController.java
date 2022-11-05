@@ -17,5 +17,6 @@ public class OMMSController {
         String s = OMMSControllerExpectPlatform.getConfigDirectory().toAbsolutePath().normalize().toString();
         logger.info(s);
         ConstantStorage.setConfig(new Config().load());
+        logger.info(ConstantStorage.getConfig().toString());
     }
 }

@@ -51,15 +51,16 @@ public class Config {
                 FileInputStream fileInputStream = new FileInputStream(configPath.toFile());
                 Properties properties = new Properties();
                 properties.load(fileInputStream);
-                enableWhitelist = (Boolean) properties.getOrDefault("enableWhitelist", false);
-                enableChatBridge = (Boolean) properties.getOrDefault("enableChatBridge", false);
+                enableWhitelist = Boolean.parseBoolean((String) properties.getOrDefault("enableWhitelist", "false"));
+                enableChatBridge = Boolean.parseBoolean((String) properties.getOrDefault("enableChatBridge", "false"));
                 controllerName = (String) properties.getOrDefault("controllerName", "omms-controller");
                 whitelistName = (String) properties.getOrDefault("usesWhitelist", "my_whitelist");
-                httpQueryPort = (Integer) properties.getOrDefault("httpQueryPort", 50001);
+                httpQueryPort = Integer.parseInt((String) properties.getOrDefault("httpQueryPort", "50001"),10);
                 httpQueryAddr = (String) properties.getOrDefault("httpQueryAddr", "localhost");
                 chatChannel = (String) properties.getOrDefault("chatChannel", "GLOBAL");
                 String serverMappingNames = (String) properties.getOrDefault("serverMappings", "");
                 if (serverMappingNames.isEmpty()) {
+                    setServerMappings(new HashMap<>());
                     return this;
                 }
                 if (serverMappingNames.contains(",")) {
@@ -76,7 +77,6 @@ public class Config {
                         String displayName = (String) properties.getOrDefault("serverMapping.%s.displayName".formatted(name), "");
                         String proxyName = (String) properties.getOrDefault("serverMapping.%s.proxyName".formatted(name), "");
                         if (displayName.isBlank() || proxyName.isBlank()) {
-                            setServerMappings(null);
                             continue;
                         }
                         mapping.setDisplayName(displayName);
@@ -90,7 +90,6 @@ public class Config {
                     String displayName = (String) properties.getOrDefault("serverMapping.%s.displayName".formatted(serverMappingNames), "");
                     String proxyName = (String) properties.getOrDefault("serverMapping.%s.proxyName".formatted(serverMappingNames), "");
                     if (displayName.isBlank() || proxyName.isBlank()) {
-                        setServerMappings(null);
                         return this;
                     }
                     mapping.setDisplayName(displayName);
@@ -99,17 +98,11 @@ public class Config {
                     hashMap.put(serverMappingNames, mapping);
                     setServerMappings(hashMap);
                 }
-
             } catch (Exception e) {
                 logger.error("Cannot read config \"omms.properties\".", e);
             }
         }
         return this;
-    }
-
-
-    private void setServerMappings(HashMap<String, ServerMapping> serverMappings) {
-        this.serverMappings = serverMappings;
     }
 
     public boolean isEnableWhitelist() {
@@ -142,6 +135,10 @@ public class Config {
 
     public HashMap<String, ServerMapping> getServerMappings() {
         return serverMappings;
+    }
+
+    private void setServerMappings(HashMap<String, ServerMapping> serverMappings) {
+        this.serverMappings = serverMappings;
     }
 
     @Override

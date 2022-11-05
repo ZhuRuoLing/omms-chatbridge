@@ -2,12 +2,14 @@ package net.zhuruoling.omms.controller.architectury.util;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.*;
 import net.minecraft.util.Formatting;
 import net.zhuruoling.omms.controller.architectury.announcement.Announcement;
+import net.zhuruoling.omms.controller.architectury.command.Commands;
 import net.zhuruoling.omms.controller.architectury.config.ConstantStorage;
 import net.zhuruoling.omms.controller.architectury.network.Broadcast;
 import net.zhuruoling.omms.controller.architectury.network.ControllerTypes;
@@ -173,7 +175,8 @@ public class Util {
     public static Text fromBroadcastToQQ(Broadcast broadcast) {
         Style style = Style.EMPTY;
 
-        List<Text> texts = List.of(Text.of(broadcast.getChannel()).copyContentOnly().setStyle(style.withColor(Formatting.AQUA)),
+        List<Text> texts = List.of(
+                Text.of(broadcast.getChannel()).copyContentOnly().setStyle(style.withColor(Formatting.AQUA)),
                 Text.of("<").copyContentOnly(),
                 Text.of(broadcast.getPlayer().replaceFirst("\ufff3\ufff4", "")).copyContentOnly().setStyle(style.withColor(Formatting.YELLOW).withBold(true).withObfuscated(Objects.equals(broadcast.getServer(), "OMMS CENTRAL"))),
                 LEFT_BRACKET.copyContentOnly(),
@@ -194,13 +197,13 @@ public class Util {
 
 
     public static void sendChatBroadcast(String text, String playerName) {
-        Broadcast broadcast = new Broadcast(playerName, text);
+        Broadcast broadcast = new Broadcast(ConstantStorage.getConfig().getChatChannel(),ConstantStorage.getConfig().getControllerName(),playerName, text);
         Gson gson = new GsonBuilder().serializeNulls().create();
         String data = gson.toJson(broadcast, Broadcast.class);
         ConstantStorage.getSender().addToQueue(Util.TARGET_CHAT, data);
     }
 
-    public static void sendStatus(MinecraftServer server, UdpBroadcastSender.Target target){
+    public static void sendStatus(MinecraftServer server, UdpBroadcastSender.Target target) {
         var status = new Status(
                 ConstantStorage.getConfig().getControllerName(),
                 ControllerTypes.FABRIC,
@@ -211,9 +214,8 @@ public class Util {
         ConstantStorage.getSender().createMulticastSocketCache(target);
         try {
             Thread.sleep(50);
-            ConstantStorage.getSender().addToQueue(target,gson.toJson(status));
-        }
-        catch (Exception e){
+            ConstantStorage.getSender().addToQueue(target, gson.toJson(status));
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -221,14 +223,14 @@ public class Util {
     public static int getAnnouncementToPlayerFromUrl(CommandContext<ServerCommandSource> context, String url) {
         String result = Util.invokeHttpGetRequest(url);
         if (result != null) {
-            if (result.equals("NO_ANNOUNCEMENT")) {
+            if (result.equals("\"NO_ANNOUNCEMENT\"")) {
                 Text text = Texts.join(Text.of("No announcement.").copyContentOnly().getWithStyle(Style.EMPTY.withColor(Formatting.AQUA)), Text.empty());
                 context.getSource().sendFeedback(text, false);
                 return 0;
             }
             System.out.println(result);
             try {
-                String jsonStr = new String(Base64.getDecoder().decode(result.replace("\"", "")), StandardCharsets.UTF_8);
+                String jsonStr = new String(Base64.getDecoder().decode(result.substring(1, result.length() - 2)), StandardCharsets.UTF_8);
                 Gson gson = new GsonBuilder().serializeNulls().create();
                 var announcement = gson.fromJson(jsonStr, Announcement.class);
                 context.getSource().sendFeedback(Util.fromAnnouncement(announcement), false);
@@ -242,5 +244,19 @@ public class Util {
         }
 
         return 0;
+    }
+
+
+    public static void registerCommand(MinecraftServer minecraftServer) {
+        var dispatcher = minecraftServer.getCommandManager().getDispatcher();
+        registerCommand(dispatcher);
+    }
+
+    public static void registerCommand(CommandDispatcher<ServerCommandSource> dispatcher) {
+        ConstantStorage.logger.info("Registering Commands!");
+        dispatcher.register(Commands.ANNOUNCEMENT_COMMAND);
+        dispatcher.register(Commands.MENU_COMMAND);
+        dispatcher.register(Commands.SENDTOCONSOLE_COMMAND);
+        dispatcher.register(Commands.QQ_CHAT_SEND);
     }
 }

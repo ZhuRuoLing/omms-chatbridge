@@ -15,6 +15,13 @@ public class Broadcast {
         this.content = content;
     }
 
+    public Broadcast(String channel, String server, String player, String content) {
+        this.channel = channel;
+        this.server = server;
+        this.player = player;
+        this.content = content;
+    }
+
     public String getChannel() {
         return channel;
     }

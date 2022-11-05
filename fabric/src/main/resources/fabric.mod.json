@@ -16,8 +16,7 @@
     ]
   },
   "mixins": [
-    "omms-controller.mixins.json",
-    "omms-controller-common.mixins.json"
+    "omms-controller.mixins.json"
   ],
   "depends": {
     "fabric": "*",
