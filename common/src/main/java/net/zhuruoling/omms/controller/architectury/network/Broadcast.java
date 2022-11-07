@@ -1,18 +1,21 @@
 package net.zhuruoling.omms.controller.architectury.network;
 
 
+import net.zhuruoling.omms.controller.architectury.util.Util;
 
 public class Broadcast {
     String channel;
     String server;
     String player;
     String content;
+    String id;
 
     public Broadcast(String player, String content) {
         this.server = "";
         this.channel = "";
         this.player = player;
         this.content = content;
+        this.id = Util.randomStringGen(16);
     }
 
     public Broadcast(String channel, String server, String player, String content) {
@@ -20,6 +23,15 @@ public class Broadcast {
         this.server = server;
         this.player = player;
         this.content = content;
+        this.id = Util.randomStringGen(16);
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getChannel() {

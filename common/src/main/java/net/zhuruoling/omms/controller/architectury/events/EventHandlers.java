@@ -10,13 +10,17 @@ import net.zhuruoling.omms.controller.architectury.util.Util;
 import java.util.Objects;
 
 public class EventHandlers {
+    public static String oldId = "";
+
     public static UdpReceiver createChatReceiver(MinecraftServer server) {
         return new UdpReceiver(server, Util.TARGET_CHAT, (s, m) -> {
             if (!ConstantStorage.getConfig().isEnableChatBridge()) return;
             var broadcast = new Gson().fromJson(m, Broadcast.class);
+            if (Objects.equals(broadcast.getId(), EventHandlers.oldId)) return;
             //logger.info(String.format("%s <%s[%s]> %s", Objects.requireNonNull(broadcast).getChannel(), broadcast.getPlayer(), broadcast.getServer(), broadcast.getContent()));
             if (broadcast.getPlayer().startsWith("\ufff3\ufff4")) {
                 server.execute(() -> server.getPlayerManager().broadcast(Util.fromBroadcastToQQ(broadcast), false));
+                return;
             }
             if (!Objects.equals(broadcast.getServer(), ConstantStorage.getConfig().getControllerName())) {
                 if (Objects.equals(broadcast.getChannel(), ConstantStorage.getConfig().getChatChannel())) {
