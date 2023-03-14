@@ -14,8 +14,8 @@ loom {
         convertAccessWideners = true
         extraAccessWideners.add loom.accessWidenerPath.get().asFile.name
 
-        mixinConfig "omms-controller-common.mixins.json"
-        mixinConfig "omms-controller.mixins.json"
+        mixinConfig "omms-chatbridge-common.mixins.json"
+        mixinConfig "omms-chatbridge.mixins.json"
     }
 }
 

@@ -1,0 +1,12 @@
+{
+  "required": true,
+  "package": "net.zhuruoling.omms.chatbridge.architectury.forge.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "server": [
+    "PlayerDeathEventInject",
+    "PlayerChatEventInject"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

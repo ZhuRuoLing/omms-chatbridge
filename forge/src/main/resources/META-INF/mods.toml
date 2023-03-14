@@ -4,9 +4,9 @@ loaderVersion = "[43,)"
 license = "WTFPL License"
 
 [[mods]]
-modId = "ommscontrollerarchitectury"
+modId = "ommschatbridge"
 version = "${version}"
-displayName = "Example Mod"
+displayName = "OMMS Chatbridge"
 authors = "ZhuRuoLing"
 description = '''
 ree!
